@@ -110,7 +110,7 @@ build() {
 }
 
 package_emacs-gtk2() {
-  pkgdesc="GNU Emacs, the extensible self-documenting text editor — built from git sources."
+  pkgdesc="GNU Emacs, the extensible self-documenting text editor."
   depends=('gpm' 'giflib' 'm17n-lib' 'desktop-file-utils' 'alsa-lib' 'imagemagick' 'gtk2')
   conflicts=('emacs' 'emacs-git')
   provides=('emacs')
