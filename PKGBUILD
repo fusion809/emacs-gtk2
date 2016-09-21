@@ -47,21 +47,19 @@ _savannah="git://git.savannah.gnu.org/emacs.git"
 _github="git+https://github.com/emacs-mirror/emacs.git"
 license=('GPL')
 makedepends=('git')
-source=("${_pkgname}::${_github}#tag=emacs-$pkgver"
-#"${_pkgname}::${_savannah}"
-)
+source=("ftp://ftp.gnu.org/gnu/${_pkgname}/${_pkgname}-$pkgver.tar.xz")
 md5sums=('SKIP')
 
 # There is no need to run autogen.sh after first checkout.
 # Doing so, breaks incremental compilation.
 prepare() {
-  cd "$srcdir/${_pkgname}"
+  cd "$srcdir/${_pkgname}-${pkgver}"
 
   [[ -x configure ]] || ./autogen.sh
 }
 
 build() {
-  cd "$srcdir/${_pkgname}"
+  cd "$srcdir/${_pkgname}-${pkgver}"
 
   # Avoid hardening-wrapper (taken from emacs-pretest, thanks to Thomas Jost).
   export PATH=$(echo "$PATH" | sed 's!/usr/lib/hardening-wrapper/bin!!g')
@@ -101,21 +99,15 @@ build() {
   make
   make html
   make pdf
-
-  # You may need to run this if loaddefs.el files become
-  # corrupt.
-  #cd "$srcdir/${_pkgname}/lisp"
-  #make autoloads
-  #cd ../
 }
 
 package_emacs-gtk2() {
-  pkgdesc="GNU Emacs, the extensible self-documenting text editor."
+  pkgdesc="GNU Emacs, the extensible self-documenting text editor, with a GUI build with the GTK2 toolkit."
   depends=('gpm' 'giflib' 'm17n-lib' 'desktop-file-utils' 'alsa-lib' 'imagemagick' 'gtk2')
   conflicts=('emacs' 'emacs-git')
   provides=('emacs')
 
-  cd "$srcdir/${_pkgname}"
+  cd "$srcdir/${_pkgname}-$pkgver"
 
   make DESTDIR="$pkgdir/" install
 
@@ -141,7 +133,7 @@ package_emacs-docs() {
   makedepends+=('texlive-core')
   conflicts=('emacs-git-docs')
 
-  cd "$srcdir/${_pkgname}"
+  cd "$srcdir/${_pkgname}-$pkgver"
 
   make DESTDIR="$pkgdir/" install-html
   make DESTDIR="$pkgdir/" install-pdf
